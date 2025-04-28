@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메시지</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #fdfdfd;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      background-color: #ffc107;
+      color: #fff;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+    header p {
+      font-size: 1.2em;
+      margin-top: 5px;
+    }
+    section {
+      margin: 20px auto;
+      max-width: 800px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    section h2 {
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      color: #007BFF;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    input, textarea, button {
+      font-size: 1em;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+    button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #output2 {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    .message {
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f0f8ff;
+    }
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      padding: 10px 0;
+      background-color: #f1f1f1;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <header>
+  </header>
+
+
+  <section>
+    <h2>🎉 축하 메시지</h2>
+
+    <div id="output2">
+      <h3>축하 메시지 목록</h3>
+      <!-- 메시지 출력 영역 -->
+    </div>
+  </section>
+
+
+
+  <script>
+
+
+    async function fetchData() {
+      try {
+        const res  = await fetch(
+          'https://script.google.com/macros/s/AKfycbwjnczZE7w8pYuITaSdABAeTnS0rROha36mm18jvhRo_XhM6SroY4ktf-tDWNOJJLJl/exec'
+        );
+        if (!res.ok) throw new Error(res.statusText);
+        const data = await res.json();
+
+        const output2 = document.getElementById('output2');
+        output2.innerHTML = '<h3>축하 메시지 목록</h3>';
+
+        data.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'message';
+
+          // timestamp를 한국 표기로 포맷
+          const timeStr = new Date(item.time)
+            .toLocaleString('ko-KR', { hour12: false });
+
+          div.innerHTML = `
+            <strong>${item.name}</strong>: ${item.value}
+            <span class="timestamp">(${timeStr})</span>
+          `;
+          output2.appendChild(div);
+        });
+      } catch (err) {
+        console.error(err);
+        document.getElementById('output2')
+          .textContent = `Error: ${err.message}`;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchData);
+  </script>
+
+</body>
+</html>
